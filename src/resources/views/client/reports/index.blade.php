@@ -9,50 +9,7 @@
 </head>
 <body class="bg-gray-50 font-sans antialiased">
     <div class="min-h-screen flex">
-        <!-- Sidebar -->
-        <div class="hidden md:flex md:w-64 md:flex-col">
-            <div class="flex flex-col flex-grow pt-5 overflow-y-auto bg-white border-r border-gray-200">
-                <!-- Logo -->
-                <div class="flex items-center flex-shrink-0 px-4">
-                    <i class="fas fa-calendar-check text-blue-600 text-2xl mr-3"></i>
-                    <h1 class="text-xl font-bold text-gray-900">BookEasy</h1>
-                </div>
-                
-                <!-- Navigation -->
-                <div class="mt-8 flex-grow flex flex-col">
-                    <nav class="flex-1 px-2 space-y-1">
-                        <a href="/dashboard" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
-                            <i class="fas fa-tachometer-alt text-gray-400 mr-3"></i>
-                            Dashboard
-                        </a>
-                        <a href="/bookings" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
-                            <i class="fas fa-calendar-alt text-gray-400 mr-3"></i>
-                            Bookings
-                        </a>
-                        <a href="/rooms" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
-                            <i class="fas fa-bed text-gray-400 mr-3"></i>
-                            Rooms & Services
-                        </a>
-                        <a href="/customers" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
-                            <i class="fas fa-users text-gray-400 mr-3"></i>
-                            Customers
-                        </a>
-                        <a href="/calendar" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
-                            <i class="fas fa-calendar text-gray-400 mr-3"></i>
-                            Calendar
-                        </a>
-                        <a href="/reports" class="bg-blue-50 border-r-4 border-blue-600 text-blue-700 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
-                            <i class="fas fa-chart-bar text-blue-500 mr-3"></i>
-                            Reports
-                        </a>
-                        <a href="/settings" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
-                            <i class="fas fa-cog text-gray-400 mr-3"></i>
-                            Settings
-                        </a>
-                    </nav>
-                </div>
-            </div>
-        </div>
+        @include('client.sidebar')
 
         <!-- Main Content -->
         <div class="flex flex-col w-0 flex-1 overflow-hidden">
