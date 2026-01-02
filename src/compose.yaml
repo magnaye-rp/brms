@@ -94,6 +94,7 @@ services:
         networks:
             - sail
     selenium:
+
         image: selenium/standalone-chromium
         extra_hosts:
             - 'host.docker.internal:host-gateway'
@@ -101,6 +102,20 @@ services:
             - '/dev/shm:/dev/shm'
         networks:
             - sail
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin:latest
+        ports:
+            - '8081:80'
+        environment:
+            PMA_HOST: mysql
+            PMA_PORT: 3306
+            PMA_USER: '${DB_USERNAME}'
+            PMA_PASSWORD: '${DB_PASSWORD}'
+        depends_on:
+            - mysql
+        networks:
+            - sail
+
 networks:
     sail:
         driver: bridge

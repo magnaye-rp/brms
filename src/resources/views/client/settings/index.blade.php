@@ -62,31 +62,31 @@
                             <div class="lg:col-span-1">
                                 <nav class="space-y-1">
                                     <a href="#" class="bg-blue-50 text-blue-700 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
-                                        <i class="fas fa-user text-blue-500 mr-3"></i>
+                                        <i class="fas fa-user text-blue-500 mr-2 sm:mr-3"></i>
                                         Profile
                                     </a>
                                     <a href="#" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
-                                        <i class="fas fa-building text-gray-400 mr-3"></i>
+                                        <i class="fas fa-building text-gray-400 mr-2 sm:mr-3"></i>
                                         Property
                                     </a>
                                     <a href="#" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
-                                        <i class="fas fa-bed text-gray-400 mr-3"></i>
+                                        <i class="fas fa-bed text-gray-400 mr-2 sm:mr-3"></i>
                                         Rooms
                                     </a>
                                     <a href="#" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
-                                        <i class="fas fa-bell text-gray-400 mr-3"></i>
+                                        <i class="fas fa-bell text-gray-400 mr-2 sm:mr-3"></i>
                                         Notifications
                                     </a>
                                     <a href="#" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
-                                        <i class="fas fa-credit-card text-gray-400 mr-3"></i>
+                                        <i class="fas fa-credit-card text-gray-400 mr-2 sm:mr-3"></i>
                                         Payments
                                     </a>
                                     <a href="#" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
-                                        <i class="fas fa-shield-alt text-gray-400 mr-3"></i>
+                                        <i class="fas fa-shield-alt text-gray-400 mr-2 sm:mr-3"></i>
                                         Security
                                     </a>
                                     <a href="#" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
-                                        <i class="fas fa-link text-gray-400 mr-3"></i>
+                                        <i class="fas fa-link text-gray-400 mr-2 sm:mr-3"></i>
                                         Integrations
                                     </a>
                                 </nav>

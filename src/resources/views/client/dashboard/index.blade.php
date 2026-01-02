@@ -8,14 +8,18 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-50 font-sans antialiased">
+    <!-- Mobile sidebar overlay -->
+    <div class="fixed inset-0 z-40 bg-gray-600 bg-opacity-75 md:hidden hidden" id="mobile-sidebar-overlay"></div>
+
     <div class="min-h-screen flex">
-        @include('client.sidebar')
+        @include('client.sidebar', ['active' => 'dashboard'])
 
         <!-- Main Content -->
-        <div class="flex flex-col w-0 flex-1 overflow-hidden">
+        <div class="flex flex-col flex-1 overflow-hidden md:ml-0">
             <!-- Header -->
-            <div class="relative z-10 flex-shrink-0 flex h-16 bg-white shadow">
-                <button type="button" class="px-4 border-r border-gray-200 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 md:hidden">
+            <header class="relative z-10 flex-shrink-0 flex h-16 bg-white shadow">
+                <button type="button" class="px-4 border-r border-gray-200 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 md:hidden" id="mobile-menu-button">
+                    <span class="sr-only">Open sidebar</span>
                     <i class="fas fa-bars"></i>
                 </button>
                 <div class="flex-1 px-4 flex justify-between">
@@ -26,7 +30,7 @@
                                 <div class="absolute inset-y-0 left-0 flex items-center pointer-events-none">
                                     <i class="fas fa-search h-5 w-5"></i>
                                 </div>
-                                <input id="search-field" class="block w-full h-full pl-8 pr-3 py-2 border-transparent text-gray-900 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-0 focus:border-transparent" placeholder="Search bookings, customers..." type="search">
+                                <input id="search-field" class="block w-full h-full pl-8 pr-3 py-2 border-transparent text-gray-900 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-0 focus:border-transparent sm:text-sm" placeholder="Search bookings, customers..." type="search">
                             </div>
                         </form>
                     </div>
@@ -48,20 +52,20 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </header>
 
             <!-- Main Content Area -->
             <main class="flex-1 relative overflow-y-auto focus:outline-none">
-                <div class="py-6">
-                    <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
+                <div class="py-4 sm:py-6">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <!-- Page Header -->
-                        <div class="mb-8">
-                            <h1 class="text-2xl font-semibold text-gray-900">Dashboard</h1>
+                        <div class="mb-6 sm:mb-8">
+                            <h1 class="text-xl sm:text-2xl font-semibold text-gray-900">Dashboard</h1>
                             <p class="mt-1 text-sm text-gray-500">Welcome back! Here's what's happening with your bookings today.</p>
                         </div>
 
                         <!-- Statistics Cards -->
-                        <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-8">
+                        <div class="grid grid-cols-1 gap-4 sm:gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-6 sm:mb-8">
                             <!-- Total Bookings -->
                             <div class="bg-white overflow-hidden shadow rounded-lg">
                                 <div class="p-5">
@@ -182,15 +186,15 @@
                                         </div>
 
                                         <!-- Bookings Table -->
-                                        <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                                        <div class="overflow-x-auto shadow ring-1 ring-black ring-opacity-5 rounded-lg">
                                             <table class="min-w-full divide-y divide-gray-300">
                                                 <thead class="bg-gray-50">
                                                     <tr>
-                                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Guest</th>
-                                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Room</th>
-                                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Check-in</th>
-                                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                                                        <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Guest</th>
+                                                        <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Room</th>
+                                                        <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Check-in</th>
+                                                        <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                                        <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody class="bg-white divide-y divide-gray-200">
@@ -217,7 +221,7 @@
                                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">$299/night</td>
                                                     </tr>
                                                     <tr>
-                                                        <td class="px-6 py-4 whitespace-nowrap">
+                                                        <td class="px-4 sm:px-6 py-4 whitespace-nowrap">
                                                             <div class="flex items-center">
                                                                 <div class="flex-shrink-0 h-10 w-10">
                                                                     <img class="h-10 w-10 rounded-full" src="https://ui-avatars.com/api/?name=Michael+Chen&background=f3f4f6&color=374151" alt="">
@@ -228,18 +232,18 @@
                                                                 </div>
                                                             </div>
                                                         </td>
-                                                        <td class="px-6 py-4 whitespace-nowrap">
+                                                        <td class="px-4 sm:px-6 py-4 whitespace-nowrap">
                                                             <div class="text-sm text-gray-900">Room 105</div>
                                                             <div class="text-sm text-gray-500">Standard Room</div>
                                                         </td>
-                                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Dec 29, 2024</td>
-                                                        <td class="px-6 py-4 whitespace-nowrap">
+                                                        <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900">Dec 29, 2024</td>
+                                                        <td class="px-4 sm:px-6 py-4 whitespace-nowrap">
                                                             <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">Pending</span>
                                                         </td>
-                                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">$159/night</td>
+                                                        <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900">$159/night</td>
                                                     </tr>
                                                     <tr>
-                                                        <td class="px-6 py-4 whitespace-nowrap">
+                                                        <td class="px-4 sm:px-6 py-4 whitespace-nowrap">
                                                             <div class="flex items-center">
                                                                 <div class="flex-shrink-0 h-10 w-10">
                                                                     <img class="h-10 w-10 rounded-full" src="https://ui-avatars.com/api/?name=Emma+Davis&background=f3f4f6&color=374151" alt="">
@@ -250,15 +254,15 @@
                                                                 </div>
                                                             </div>
                                                         </td>
-                                                        <td class="px-6 py-4 whitespace-nowrap">
+                                                        <td class="px-4 sm:px-6 py-4 whitespace-nowrap">
                                                             <div class="text-sm text-gray-900">Room 301</div>
                                                             <div class="text-sm text-gray-500">Premium Room</div>
                                                         </td>
-                                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Dec 30, 2024</td>
-                                                        <td class="px-6 py-4 whitespace-nowrap">
+                                                        <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900">Dec 30, 2024</td>
+                                                        <td class="px-4 sm:px-6 py-4 whitespace-nowrap">
                                                             <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">Confirmed</span>
                                                         </td>
-                                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">$219/night</td>
+                                                        <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900">$219/night</td>
                                                     </tr>
                                                 </tbody>
                                             </table>

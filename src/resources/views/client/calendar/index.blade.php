@@ -12,30 +12,34 @@
     </style>
 </head>
 <body class="bg-gray-50 font-sans antialiased">
+    <!-- Mobile sidebar overlay -->
+    <div class="fixed inset-0 z-40 bg-gray-600 bg-opacity-75 md:hidden hidden" id="mobile-sidebar-overlay"></div>
+
     <div class="min-h-screen flex">
-        @include('client.sidebar')
+        @include('client.sidebar', ['active' => 'calendar'])
 
         <!-- Main Content -->
-        <div class="flex flex-col w-0 flex-1 overflow-hidden">
+        <div class="flex flex-col flex-1 overflow-hidden md:ml-0">
             <!-- Header -->
-            <div class="relative z-10 flex-shrink-0 flex h-16 bg-white shadow">
-                <button type="button" class="px-4 border-r border-gray-200 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 md:hidden">
+            <header class="relative z-10 flex-shrink-0 flex h-16 bg-white shadow">
+                <button type="button" class="px-4 border-r border-gray-200 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 md:hidden" id="mobile-menu-button">
+                    <span class="sr-only">Open sidebar</span>
                     <i class="fas fa-bars"></i>
                 </button>
                 <div class="flex-1 px-4 flex justify-between">
                     <div class="flex-1 flex items-center">
                         <!-- Month Navigation -->
-                        <div class="flex items-center space-x-4">
+                        <div class="flex items-center space-x-2 sm:space-x-4">
                             <button class="p-2 rounded-full hover:bg-gray-100">
                                 <i class="fas fa-chevron-left text-gray-600"></i>
                             </button>
-                            <h2 class="text-xl font-semibold text-gray-900">December 2024</h2>
+                            <h2 class="text-lg sm:text-xl font-semibold text-gray-900">December 2024</h2>
                             <button class="p-2 rounded-full hover:bg-gray-100">
                                 <i class="fas fa-chevron-right text-gray-600"></i>
                             </button>
                         </div>
                     </div>
-                    <div class="ml-4 flex items-center md:ml-6 space-x-4">
+                    <div class="ml-4 flex items-center md:ml-6 space-x-2 sm:space-x-4">
                         <button type="button" class="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                             <span class="sr-only">View notifications</span>
                             <i class="fas fa-bell h-6 w-6"></i>
@@ -51,7 +55,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </header>
 
             <!-- Main Content Area -->
             <main class="flex-1 relative overflow-y-auto focus:outline-none">
@@ -82,9 +86,9 @@
                         </div>
 
                         <!-- Calendar Grid -->
-                        <div class="bg-white shadow rounded-lg">
+                        <div class="bg-white shadow rounded-lg overflow-x-auto">
                             <!-- Weekday Headers -->
-                            <div class="grid grid-cols-7 border-b border-gray-200">
+                            <div class="grid grid-cols-7 border-b border-gray-200 min-w-[700px]">
                                 <div class="px-4 py-3 text-center text-sm font-medium text-gray-500">Sun</div>
                                 <div class="px-4 py-3 text-center text-sm font-medium text-gray-500">Mon</div>
                                 <div class="px-4 py-3 text-center text-sm font-medium text-gray-500">Tue</div>

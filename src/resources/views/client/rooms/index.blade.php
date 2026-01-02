@@ -49,20 +49,20 @@
 
             <!-- Main Content Area -->
             <main class="flex-1 relative overflow-y-auto focus:outline-none">
-                <div class="py-6">
-                    <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
+                <div class="py-4 sm:py-6">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <!-- Page Header -->
-                        <div class="flex items-center justify-between mb-8">
-                            <div>
-                                <h1 class="text-2xl font-semibold text-gray-900">Rooms & Services</h1>
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 sm:mb-8">
+                            <div class="mb-4 sm:mb-0">
+                                <h1 class="text-xl sm:text-2xl font-semibold text-gray-900">Rooms & Services</h1>
                                 <p class="mt-1 text-sm text-gray-500">Manage your rooms and services</p>
                             </div>
-                            <div class="flex space-x-3">
-                                <button class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
+                                <button class="inline-flex items-center justify-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                                     <i class="fas fa-plus mr-2"></i>
                                     Add Room
                                 </button>
-                                <button class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                <button class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                                     <i class="fas fa-plus mr-2"></i>
                                     Add Service
                                 </button>

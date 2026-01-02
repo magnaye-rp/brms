@@ -266,7 +266,7 @@
                         </div>
 
                         <!-- Detailed Reports -->
-                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             <!-- Top Performing Rooms -->
                             <div class="bg-white shadow rounded-lg">
                                 <div class="px-6 py-4 border-b border-gray-200">
