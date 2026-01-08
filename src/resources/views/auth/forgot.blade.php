@@ -119,6 +119,7 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
+            text-decoration: none;
         }
         
         .btn-back:hover {
@@ -208,6 +209,16 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
+        
+        .alert {
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .invalid-feedback {
+            font-size: 13px;
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -221,10 +232,30 @@
             <h1>Forgot Password?</h1>
             <p class="subtitle">No worries! Enter your email address and we'll send you a link to reset your password.</p>
             
-            <form id="forgotForm">
+            @if(session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
+            
+            @if(session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+            
+            <form id="forgotForm" method="POST" action="{{ route('password.email') }}">
+                @csrf
+                
                 <div class="mb-3">
                     <label for="email" class="form-label">Email Address</label>
-                    <input type="email" class="form-control" id="email" placeholder="you@example.com" required>
+                    <input type="email" class="form-control @error('email') is-invalid @enderror" 
+                           id="email" name="email" placeholder="you@example.com" value="{{ old('email') }}" required>
+                    @error('email')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @else
+                        <div class="form-text">Enter your registered email address</div>
+                    @enderror
                 </div>
                 
                 <button type="submit" class="btn-reset" id="submitBtn">
@@ -232,10 +263,10 @@
                     <span id="btnSpinner" class="spinner hidden"></span>
                 </button>
                 
-                <button type="button" class="btn-back" onclick="window.history.back()">
+                <a href="{{ route('login') }}" class="btn-back">
                     <i class="bi bi-arrow-left"></i>
                     Back to Sign In
-                </button>
+                </a>
             </form>
             
             <div class="info-box">
@@ -271,10 +302,10 @@
                 Resend Email
             </button>
             
-            <button type="button" class="btn-back" onclick="window.history.back()">
+            <a href="{{ route('login') }}" class="btn-back">
                 <i class="bi bi-arrow-left"></i>
                 Back to Sign In
-            </button>
+            </a>
             
             <div class="help-links">
                 Didn't receive the email? <a href="#">Contact Support</a>
@@ -297,34 +328,30 @@
         const successView = document.getElementById('successView');
         const sentEmail = document.getElementById('sentEmail');
         
+        @if(session('success'))
+            // Show success view if we have a success message
+            sentEmail.textContent = emailInput.value || 'your email';
+            initialView.classList.add('hidden');
+            successView.classList.remove('hidden');
+        @endif
+        
         form.addEventListener('submit', function(e) {
-            e.preventDefault();
+            // Let the form submit normally to Laravel
+            // The spinner will show during the request
             
             const email = emailInput.value;
             
             // Basic email validation
             if (!email || !email.includes('@')) {
+                e.preventDefault();
                 alert('Please enter a valid email address');
                 return;
             }
             
             // Show loading state
             submitBtn.disabled = true;
-            btnText.classList.add('hidden');
+            btnText.textContent = 'Sending...';
             btnSpinner.classList.remove('hidden');
-            
-            // Simulate API call
-            setTimeout(function() {
-                // Hide loading state
-                submitBtn.disabled = false;
-                btnText.classList.remove('hidden');
-                btnSpinner.classList.add('hidden');
-                
-                // Show success view
-                sentEmail.textContent = email;
-                initialView.classList.add('hidden');
-                successView.classList.remove('hidden');
-            }, 1500);
         });
     </script>
 </body>

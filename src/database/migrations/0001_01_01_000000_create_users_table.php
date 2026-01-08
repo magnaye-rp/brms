@@ -16,9 +16,15 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password')->nullable(0);
+            $table->string('password')->nullable();
+            $table->string('provider')->nullable()->comment('OAuth provider: google, facebook, microsoft');
+            $table->string('provider_id')->nullable()->comment('Unique ID from OAuth provider');
+            $table->string('avatar')->nullable()->comment('Profile picture URL');
             $table->rememberToken();
             $table->timestamps();
+            
+            // Indexes for OAuth lookups
+            $table->index(['provider', 'provider_id']);
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
