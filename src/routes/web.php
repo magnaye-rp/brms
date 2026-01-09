@@ -84,3 +84,36 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
+// Admin Routes (protected)
+Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
+    // Admin Dashboard
+    Route::get('/dashboard', function () {
+        return view('admin/dashboard/index', ['active' => 'dashboard']);
+    })->name('dashboard');
+
+    // Admin Management
+    Route::get('/admins', function () {
+        return view('admin/admins/index', ['active' => 'admins']);
+    })->name('admins');
+
+    // User Management
+    Route::get('/users', function () {
+        return view('admin/users/index', ['active' => 'users']);
+    })->name('users');
+
+    // Reports
+    Route::get('/reports', function () {
+        return view('admin/reports/index', ['active' => 'reports']);
+    })->name('reports');
+
+    // Audit Logs
+    Route::get('/logs', function () {
+        return view('admin/logs/index', ['active' => 'logs']);
+    })->name('logs');
+
+    // Settings
+    Route::get('/settings', function () {
+        return view('admin/settings/index', ['active' => 'settings']);
+    })->name('settings');
+});
+
