@@ -117,3 +117,36 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     })->name('settings');
 });
 
+// Staff Routes (protected)
+Route::middleware('auth')->prefix('staff')->name('staff.')->group(function () {
+    // Staff Dashboard
+    Route::get('/dashboard', function () {
+        return view('staff/dashboard/index', ['active' => 'dashboard']);
+    })->name('dashboard');
+
+    // Bookings
+    Route::get('/bookings', function () {
+        return view('staff/bookings/index', ['active' => 'bookings']);
+    })->name('bookings');
+
+    // Rooms
+    Route::get('/rooms', function () {
+        return view('staff/rooms/index', ['active' => 'rooms']);
+    })->name('rooms');
+
+    // Customers
+    Route::get('/customers', function () {
+        return view('staff/customers/index', ['active' => 'customers']);
+    })->name('customers');
+
+    // Calendar
+    Route::get('/calendar', function () {
+        return view('staff/calendar/index', ['active' => 'calendar']);
+    })->name('calendar');
+
+    // Reports
+    Route::get('/reports', function () {
+        return view('staff/reports/index', ['active' => 'reports']);
+    })->name('reports');
+});
+
