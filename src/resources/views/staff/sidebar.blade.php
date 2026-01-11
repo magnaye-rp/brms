@@ -4,14 +4,14 @@
         <!-- Logo -->
         <div class="flex items-center flex-shrink-0 px-4">
             <i class="fas fa-concierge-bell text-indigo-400 text-2xl mr-3"></i>
-            <h1 class="text-xl font-bold text-white">BookEasy Staff</h1>
+            <h1 class="text-xl font-bold text-white">Staff Panel</h1>
         </div>
 
         <!-- Navigation -->
         <div class="mt-8 flex-grow flex flex-col">
             <nav class="flex-1 px-2 space-y-1">
                 <a href="{{ route('staff.dashboard') }}" class="{{ ($active ?? '') === 'dashboard' ? 'bg-indigo-800 border-r-4 border-indigo-400 text-white' : 'text-indigo-200 hover:bg-indigo-800 hover:text-white' }} group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors duration-200">
-                    <i class="fas fa-tachometer-alt {{ ($active ?? '') === 'dashboard' ? 'text-indigo-400' : 'text-indigo-400' }} mr-3"></i>
+                    <i class="fas fa-home {{ ($active ?? '') === 'dashboard' ? 'text-indigo-400' : 'text-indigo-400' }} mr-3"></i>
                     Dashboard
                 </a>
                 <a href="{{ route('staff.bookings') }}" class="{{ ($active ?? '') === 'bookings' ? 'bg-indigo-800 border-r-4 border-indigo-400 text-white' : 'text-indigo-200 hover:bg-indigo-800 hover:text-white' }} group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors duration-200">
@@ -22,18 +22,6 @@
                     <i class="fas fa-bed {{ ($active ?? '') === 'rooms' ? 'text-indigo-400' : 'text-indigo-400' }} mr-3"></i>
                     Rooms
                 </a>
-                <a href="{{ route('staff.customers') }}" class="{{ ($active ?? '') === 'customers' ? 'bg-indigo-800 border-r-4 border-indigo-400 text-white' : 'text-indigo-200 hover:bg-indigo-800 hover:text-white' }} group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors duration-200">
-                    <i class="fas fa-users {{ ($active ?? '') === 'customers' ? 'text-indigo-400' : 'text-indigo-400' }} mr-3"></i>
-                    Customers
-                </a>
-                <a href="{{ route('staff.calendar') }}" class="{{ ($active ?? '') === 'calendar' ? 'bg-indigo-800 border-r-4 border-indigo-400 text-white' : 'text-indigo-200 hover:bg-indigo-800 hover:text-white' }} group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors duration-200">
-                    <i class="fas fa-calendar {{ ($active ?? '') === 'calendar' ? 'text-indigo-400' : 'text-indigo-400' }} mr-3"></i>
-                    Calendar
-                </a>
-                <a href="{{ route('staff.reports') }}" class="{{ ($active ?? '') === 'reports' ? 'bg-indigo-800 border-r-4 border-indigo-400 text-white' : 'text-indigo-200 hover:bg-indigo-800 hover:text-white' }} group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors duration-200">
-                    <i class="fas fa-chart-bar {{ ($active ?? '') === 'reports' ? 'text-indigo-400' : 'text-indigo-400' }} mr-3"></i>
-                    Reports
-                </a>
             </nav>
         </div>
 
@@ -41,7 +29,7 @@
         <div class="p-4 border-t border-indigo-800">
             <div class="flex items-center">
                 <div class="flex-shrink-0">
-                    <img class="h-10 w-10 rounded-full" src="https://ui-avatars.com/api/?name=Staff+Member&background=6366f1&color=fff" alt="Staff avatar">
+                    <img class="h-10 w-10 rounded-full" src="https://ui-avatars.com/api/?name=Staff&background=6366f1&color=fff" alt="Staff avatar">
                 </div>
                 <div class="ml-3">
                     <p class="text-sm font-medium text-white">Staff Member</p>
@@ -57,7 +45,4 @@
         </div>
     </div>
 </div>
-
-<!-- Mobile overlay -->
-<div class="fixed inset-0 z-40 bg-gray-600 bg-opacity-75 md:hidden" style="display: none;"></div>
 

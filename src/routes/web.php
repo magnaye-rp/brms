@@ -133,20 +133,5 @@ Route::middleware('auth')->prefix('staff')->name('staff.')->group(function () {
     Route::get('/rooms', function () {
         return view('staff/rooms/index', ['active' => 'rooms']);
     })->name('rooms');
-
-    // Customers
-    Route::get('/customers', function () {
-        return view('staff/customers/index', ['active' => 'customers']);
-    })->name('customers');
-
-    // Calendar
-    Route::get('/calendar', function () {
-        return view('staff/calendar/index', ['active' => 'calendar']);
-    })->name('calendar');
-
-    // Reports
-    Route::get('/reports', function () {
-        return view('staff/reports/index', ['active' => 'reports']);
-    })->name('reports');
 });
 
