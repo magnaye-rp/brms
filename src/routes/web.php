@@ -19,9 +19,8 @@ Route::middleware('guest')->group(function () {
     Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
 });
 
-// Logout Route
+// Logout Route (POST only for security)
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
-Route::get('/logout', [AuthController::class, 'logout'])->name('logout.get')->middleware('auth');
 
 // OAuth Routes
 Route::prefix('auth')->group(function () {
