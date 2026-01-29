@@ -10,96 +10,61 @@ use Laravel\Socialite\Facades\Socialite;
 
 class SocialAuthController extends Controller
 {
-    /**
-     * Supported OAuth providers.
-     */
-    protected array $providers = ['google', 'facebook', 'microsoft'];
+    protected array $validProviders = ['google', 'facebook', 'microsoft'];
 
-    /**
-     * OAuth Service instance.
-     */
-    protected OAuthService $oauthService;
+    public function __construct(protected OAuthService $oauthService) {}
 
-    /**
-     * Create a new controller instance.
-     */
-    public function __construct(OAuthService $oauthService)
-    {
-        $this->oauthService = $oauthService;
-    }
-
-    /**
-     * Redirect to OAuth provider.
-     */
     public function redirectToProvider(string $provider)
     {
-        if (!in_array($provider, $this->providers)) {
-            return redirect()->route('login')->withErrors(['error' => 'Invalid OAuth provider.']);
+        if (!$this->isValidProvider($provider)) {
+            return $this->errorRedirect('Invalid provider');
         }
 
         try {
-            $config = config("services.{$provider}");
-            
-            if (!$config || !$config['client_id'] || !$config['client_secret']) {
-                Log::error("OAuth provider not configured: {$provider}");
-                return redirect()->route('login')->withErrors(['error' => ucfirst($provider) . ' authentication is not configured.']);
+            $config = config("services.$provider");
+            if (!$this->isConfigured($config)) {
+                Log::error("OAuth not configured: $provider");
+                return $this->errorRedirect("$provider not configured");
             }
-
             return Socialite::driver($provider)->setConfig($config)->redirect();
         } catch (\Exception $e) {
-            Log::error("OAuth redirect error for {$provider}: " . $e->getMessage());
-            return redirect()->route('login')->withErrors(['error' => "Could not redirect to {$provider}. Please try again."]);
+            Log::error("OAuth redirect error: " . $e->getMessage());
+            return $this->errorRedirect('Redirect failed');
         }
     }
 
-    /**
-     * Handle OAuth callback.
-     */
     public function handleProviderCallback(string $provider)
     {
-        if (!in_array($provider, $this->providers)) {
-            return redirect()->route('login')->withErrors(['error' => 'Invalid OAuth provider.']);
+        if (!$this->isValidProvider($provider)) {
+            return $this->errorRedirect('Invalid provider');
         }
 
         try {
-            $config = config("services.{$provider}");
+            $config = config("services.$provider");
             $socialUser = Socialite::driver($provider)->setConfig($config)->stateless()->user();
-
-            // Use OAuthService to find or create user
             $user = $this->oauthService->findOrCreateUser($provider, $socialUser);
-
             Auth::login($user, true);
             request()->session()->regenerate();
-
-            return redirect()->intended(route('dashboard'))->with('success', "Welcome! You've been logged in with {$provider}.");
+            return redirect()->intended(route('dashboard'))->with('success', 'Logged in successfully');
         } catch (\Exception $e) {
-            Log::error("OAuth callback error for {$provider}: " . $e->getMessage());
-            return redirect()->route('login')->withErrors(['error' => 'Could not authenticate with ' . ucfirst($provider) . '. Please try again.']);
+            Log::error("OAuth callback error: " . $e->getMessage());
+            return $this->errorRedirect('Authentication failed');
         }
     }
 
-    /**
-     * Disconnect OAuth provider from user account.
-     */
-    public function disconnectProvider(Request $request, string $provider)
+    protected function isValidProvider(string $provider): bool
     {
-        $user = Auth::user();
+        return in_array($provider, $this->validProviders);
+    }
 
-        if (!in_array($provider, $this->providers)) {
-            return back()->withErrors(['error' => 'Invalid OAuth provider.']);
-        }
+    protected function isConfigured(?array $config): bool
+    {
+        return $config && $config['client_id'] && $config['client_secret'];
+    }
 
-        if ($user->provider !== $provider) {
-            return back()->withErrors(['error' => 'This provider is not connected to your account.']);
-        }
-
-        if (is_null($user->password)) {
-            return back()->withErrors(['error' => 'You cannot disconnect this provider without a password set.']);
-        }
-
-        $this->oauthService->disconnect($user, $provider);
-
-        return back()->with('success', ucfirst($provider) . ' has been disconnected from your account.');
+    protected function errorRedirect(string $message): \Illuminate\Http\RedirectResponse
+    {
+        return redirect()->route('login')->withErrors(['error' => $message]);
     }
 }
 

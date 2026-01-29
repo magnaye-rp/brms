@@ -4,133 +4,52 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SocialAuthController;
 use Illuminate\Support\Facades\Route;
 
+// Public Routes
+Route::get('/', fn() => auth()->check() ? redirect()->route('dashboard') : redirect()->route('login'));
+
 // Authentication Routes
 Route::middleware('guest')->group(function () {
-    // Login
-    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-    Route::post('/login', [AuthController::class, 'login'])->name('login.post');
-    
-    // Registration
-    Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-    Route::post('/register', [AuthController::class, 'register'])->name('register.post');
-    
-    // Forgot Password
-    Route::get('/forgot-password', [AuthController::class, 'showForgotPassword'])->name('password.request');
-    Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
+    Route::view('/login', 'auth.signin')->name('login');
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::view('/register', 'auth.signup')->name('register');
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::view('/forgot-password', 'auth.forgot')->name('password.request');
+    Route::post('/forgot-password', [AuthController::class, 'sendResetLink']);
 });
 
-// Logout Route (POST only for security)
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
 // OAuth Routes
-Route::prefix('auth')->group(function () {
-    // Google OAuth
-    Route::get('/google', [SocialAuthController::class, 'redirectToProvider'])->name('auth.google');
-    Route::get('/google/callback', [SocialAuthController::class, 'handleProviderCallback'])->name('auth.google.callback');
-    
-    // Facebook OAuth
-    Route::get('/facebook', [SocialAuthController::class, 'redirectToProvider'])->name('auth.facebook');
-    Route::get('/facebook/callback', [SocialAuthController::class, 'handleProviderCallback'])->name('auth.facebook.callback');
-    
-    // Microsoft OAuth
-    Route::get('/microsoft', [SocialAuthController::class, 'redirectToProvider'])->name('auth.microsoft');
-    Route::get('/microsoft/callback', [SocialAuthController::class, 'handleProviderCallback'])->name('auth.microsoft.callback');
+Route::prefix('auth/{provider}')->group(function () {
+    Route::get('/', [SocialAuthController::class, 'redirectToProvider'])->name('auth.provider');
+    Route::get('/callback', [SocialAuthController::class, 'handleProviderCallback'])->name('auth.provider.callback');
 });
 
-// Dashboard (protected)
+// Client Routes
 Route::middleware('auth')->group(function () {
-    // Dashboard
-    Route::get('/dashboard', function () {
-        return view('client/dashboard/index', ['active' => 'dashboard']);
-    })->name('dashboard');
-
-    // Bookings
-    Route::get('/bookings', function () {
-        return view('client/booking/index', ['active' => 'bookings']);
-    })->name('bookings');
-
-    // Rooms & Services
-    Route::get('/rooms', function () {
-        return view('client/rooms/index', ['active' => 'rooms']);
-    })->name('rooms');
-
-    // Customers
-    Route::get('/customers', function () {
-        return view('client/customers/index', ['active' => 'customers']);
-    })->name('customers');
-
-    // Calendar
-    Route::get('/calendar', function () {
-        return view('client/calendar/index', ['active' => 'calendar']);
-    })->name('calendar');
-
-    // Reports
-    Route::get('/reports', function () {
-        return view('client/reports/index', ['active' => 'reports']);
-    })->name('reports');
-
-    // Settings
-    Route::get('/settings', function () {
-        return view('client/settings/index', ['active' => 'settings']);
-    })->name('settings');
+    Route::view('/dashboard', 'client/dashboard/index')->name('dashboard');
+    Route::view('/bookings', 'client/booking/index')->name('bookings');
+    Route::view('/rooms', 'client/rooms/index')->name('rooms');
+    Route::view('/customers', 'client/customers/index')->name('customers');
+    Route::view('/calendar', 'client/calendar/index')->name('calendar');
+    Route::view('/reports', 'client/reports/index')->name('reports');
+    Route::view('/settings', 'client/settings/index')->name('settings');
 });
 
-// Home route redirects to dashboard or login
-Route::get('/', function () {
-    if (auth()->check()) {
-        return redirect()->route('dashboard');
-    }
-    return redirect()->route('login');
-});
-
-// Admin Routes (protected)
+// Admin Routes
 Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
-    // Admin Dashboard
-    Route::get('/dashboard', function () {
-        return view('admin/dashboard/index', ['active' => 'dashboard']);
-    })->name('dashboard');
-
-    // Admin Management
-    Route::get('/admins', function () {
-        return view('admin/admins/index', ['active' => 'admins']);
-    })->name('admins');
-
-    // User Management
-    Route::get('/users', function () {
-        return view('admin/users/index', ['active' => 'users']);
-    })->name('users');
-
-    // Reports
-    Route::get('/reports', function () {
-        return view('admin/reports/index', ['active' => 'reports']);
-    })->name('reports');
-
-    // Audit Logs
-    Route::get('/logs', function () {
-        return view('admin/logs/index', ['active' => 'logs']);
-    })->name('logs');
-
-    // Settings
-    Route::get('/settings', function () {
-        return view('admin/settings/index', ['active' => 'settings']);
-    })->name('settings');
+    Route::view('/dashboard', 'admin/dashboard/index')->name('dashboard');
+    Route::view('/admins', 'admin/admins/index')->name('admins');
+    Route::view('/users', 'admin/users/index')->name('users');
+    Route::view('/reports', 'admin/reports/index')->name('reports');
+    Route::view('/logs', 'admin/logs/index')->name('logs');
+    Route::view('/settings', 'admin/settings/index')->name('settings');
 });
 
-// Staff Routes (protected)
+// Staff Routes
 Route::middleware('auth')->prefix('staff')->name('staff.')->group(function () {
-    // Staff Dashboard
-    Route::get('/dashboard', function () {
-        return view('staff/dashboard/index', ['active' => 'dashboard']);
-    })->name('dashboard');
-
-    // Bookings
-    Route::get('/bookings', function () {
-        return view('staff/bookings/index', ['active' => 'bookings']);
-    })->name('bookings');
-
-    // Rooms
-    Route::get('/rooms', function () {
-        return view('staff/rooms/index', ['active' => 'rooms']);
-    })->name('rooms');
+    Route::view('/dashboard', 'staff/dashboard/index')->name('dashboard');
+    Route::view('/bookings', 'staff/bookings/index')->name('bookings');
+    Route::view('/rooms', 'staff/rooms/index')->name('rooms');
 });
 
