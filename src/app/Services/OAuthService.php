@@ -2,7 +2,9 @@
 
 namespace App\Services;
 
+use App\Exceptions\AuthenticationException;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Laravel\Socialite\Contracts\User as SocialUser;
 
@@ -14,34 +16,40 @@ class OAuthService
      * @param string $provider
      * @param SocialUser $socialUser
      * @return User
+     * @throws AuthenticationException
      */
     public function findOrCreateUser(string $provider, SocialUser $socialUser): User
     {
+        $providerId = $socialUser->getId();
+        
         Log::info("Processing OAuth user for provider: {$provider}", [
-            'provider_id' => $socialUser->getId(),
+            'provider_id' => $providerId,
             'email' => $socialUser->getEmail(),
         ]);
 
-        // Check if user already exists with this provider and ID
-        $user = User::findByProvider($provider, $socialUser->getId());
-
-        if ($user) {
-            $this->updateUserFromSocial($user, $provider, $socialUser);
-            return $user;
-        }
-
-        // Check if user exists with the same email
-        if ($socialUser->getEmail()) {
-            $user = User::where('email', $socialUser->getEmail())->first();
+        // Use transaction for atomicity when creating new users
+        return DB::transaction(function () use ($provider, $socialUser, $providerId) {
+            // Check if user already exists with this provider and ID
+            $user = User::findByProvider($provider, $providerId);
 
             if ($user) {
-                $this->linkSocialAccount($user, $provider, $socialUser);
+                $this->updateUserFromSocial($user, $provider, $socialUser);
                 return $user;
             }
-        }
 
-        // Create new user
-        return $this->createUserFromSocial($provider, $socialUser);
+            // Check if user exists with the same email
+            if ($socialUser->getEmail()) {
+                $user = User::where('email', $socialUser->getEmail())->first();
+
+                if ($user) {
+                    $this->linkSocialAccount($user, $provider, $socialUser);
+                    return $user;
+                }
+            }
+
+            // Create new user
+            return $this->createUserFromSocial($provider, $socialUser);
+        });
     }
 
     /**
@@ -85,18 +93,24 @@ class OAuthService
     protected function updateUserFromSocial(User $user, string $provider, SocialUser $socialUser): User
     {
         $updateData = [];
+        $needsUpdate = false;
 
-        // Update avatar if available
-        if ($socialUser->getAvatar()) {
+        // Update avatar if available and different
+        if ($socialUser->getAvatar() && $user->avatar !== $socialUser->getAvatar()) {
             $updateData['avatar'] = $socialUser->getAvatar();
+            $needsUpdate = true;
         }
 
-        // Update name if it was empty
+        // Update name if it was empty or user is OAuth user
         if (empty($user->name) || $user->isOAuthUser()) {
-            $updateData['name'] = $this->extractName($socialUser);
+            $newName = $this->extractName($socialUser);
+            if ($user->name !== $newName) {
+                $updateData['name'] = $newName;
+                $needsUpdate = true;
+            }
         }
 
-        if (!empty($updateData)) {
+        if ($needsUpdate) {
             $user->update($updateData);
             Log::info("Updated OAuth user", ['user_id' => $user->id]);
         }
@@ -117,7 +131,7 @@ class OAuthService
         $user->update([
             'provider' => $provider,
             'provider_id' => $socialUser->getId(),
-            'avatar' => $socialUser->getAvatar(),
+            'avatar' => $socialUser->getAvatar() ?? $user->avatar,
         ]);
 
         Log::info("Linked social account to existing user", [
@@ -129,7 +143,7 @@ class OAuthService
     }
 
     /**
-     * Extract name from social user.
+     * Extract name from social user with multiple fallbacks.
      *
      * @param SocialUser $socialUser
      * @return string
@@ -142,8 +156,11 @@ class OAuthService
         }
 
         // Try to construct from first and last name
-        if ($socialUser->getFirstName() || $socialUser->getLastName()) {
-            return trim($socialUser->getFirstName() . ' ' . $socialUser->getLastName());
+        $firstName = $socialUser->getFirstName() ?? '';
+        $lastName = $socialUser->getLastName() ?? '';
+        
+        if ($firstName || $lastName) {
+            return trim($firstName . ' ' . $lastName);
         }
 
         // Use nickname
@@ -169,7 +186,7 @@ class OAuthService
      */
     protected function generatePlaceholderEmail(string $provider, SocialUser $socialUser): string
     {
-        return "{$provider}_{$socialUser->getId()}@oauth.local";
+        return sprintf('%s_%s@oauth.local', $provider, $socialUser->getId());
     }
 
     /**
@@ -195,11 +212,15 @@ class OAuthService
      * @param User $user
      * @param string $provider
      * @return User
+     * @throws AuthenticationException
      */
     public function disconnect(User $user, string $provider): User
     {
         if (!$this->canDisconnect($user, $provider)) {
-            throw new \Exception('Cannot disconnect this provider.');
+            throw new AuthenticationException(
+                'Cannot disconnect this provider. You must have a password set.',
+                'disconnect_failed'
+            );
         }
 
         $user->update([
@@ -213,6 +234,28 @@ class OAuthService
         ]);
 
         return $user;
+    }
+
+    /**
+     * Find user by email across all providers.
+     *
+     * @param string $email
+     * @return User|null
+     */
+    public function findByEmail(string $email): ?User
+    {
+        return User::where('email', $email)->first();
+    }
+
+    /**
+     * Check if email is already registered.
+     *
+     * @param string $email
+     * @return bool
+     */
+    public function emailExists(string $email): bool
+    {
+        return User::where('email', $email)->exists();
     }
 }
 
